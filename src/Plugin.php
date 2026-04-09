@@ -55,7 +55,21 @@ final class Plugin
             add_filter( $filter, $this, 999 );
         }
 
+        add_filter( 'template_directory_uri', [ $this, 'filter_directory_uri' ], 999 );
+        add_filter( 'stylesheet_directory_uri', [ $this, 'filter_directory_uri' ], 999 );
         add_filter( 'wp_calculate_image_srcset', [ $this, 'filter_srcset' ], 999 );
+    }
+
+    /**
+     * Rewrite base theme directory URLs so direct get_template_directory_uri()
+     * and get_stylesheet_directory_uri() usages continue to point at CDN.
+     *
+     * @param string $uri
+     * @return string
+     */
+    public function filter_directory_uri( string $uri ) : string
+    {
+        return $this( $uri, true );
     }
 
     /**
